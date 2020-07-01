@@ -1,0 +1,298 @@
+unit Unit1;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes,
+  System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs,
+  System.Math.Vectors, FMX.Types3D, FMX.Objects3D, FMX.Controls3D,
+  FMX.Viewport3D, FMX.MaterialSources, FMX.Ani;
+
+type
+  TForm1 = class(TForm)
+    Viewport3D1: TViewport3D;
+    Dummy1: TDummy;
+    Light1: TLight;
+    Plane1: TPlane;
+    RoundCubeOyuncu: TRoundCube;
+    LightMaterialBitmap: TLightMaterialSource;
+    LightMaterialKhaki: TLightMaterialSource;
+    LightMaterialTomato: TLightMaterialSource;
+    LightMaterialShadow: TLightMaterialSource;
+    FloatAniGameLoop: TFloatAnimation;
+    Sphere1: TSphere;
+    DummyTop: TDummy;
+    StrokeCubeSerit: TStrokeCube;
+    FloatAniShowBegin: TFloatAnimation;
+    FloatAniShowEnd: TFloatAnimation;
+    FloatAniMoveAndroal: TFloatAnimation;
+    ColorKeyAniSerit: TColorKeyAnimation;
+    ColorKeyAnimation2: TColorKeyAnimation;
+    ColorKeyAniViewPort: TColorKeyAnimation;
+    Disk1: TDisk;
+    PlaneShadow: TPlane;
+    Text3D1: TText3D;
+    StrokeCubeTarget: TStrokeCube;
+    procedure RoundCubeOyuncuMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single; RayPos, RayDir: TVector3D);
+    procedure RoundCubeOyuncuMouseMove(Sender: TObject; Shift: TShiftState;
+      X, Y: Single; RayPos, RayDir: TVector3D);
+    procedure RoundCubeOyuncuMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single; RayPos, RayDir: TVector3D);
+    procedure FormCreate(Sender: TObject);
+    procedure FloatAniShowBeginFinish(Sender: TObject);
+    procedure FloatAniGameLoopProcess(Sender: TObject);
+    procedure FloatAniGameLoopFinish(Sender: TObject);
+    procedure ColorKeyAniViewPortFinish(Sender: TObject);
+    procedure FloatAniShowEndFinish(Sender: TObject);
+    procedure RoundCubeOyuncuRender(Sender: TObject; Context: TContext3D);
+  private
+    { Private declarations }
+  public
+    speed: Single;
+    punkte: TPoint3D;
+    procedure MoveBall;
+    procedure vurus;
+    procedure AndroAl;
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.fmx}
+{$R *.LgXhdpiTb.fmx ANDROID}
+
+const
+  startspeed: Single = 2;
+  Field2D: TPointF = (X: 16; Y: 35);
+
+procedure TForm1.AndroAl;
+var
+  P, K, D, M: TPoint3D;
+  B, S: Single;
+begin
+  P := DummyTop.Position.Point;
+  K := Point3D(0, RoundCubeOyuncu.Position.Y, 0);
+  K.X := StrokeCubeSerit.Width * 0.5;
+  D := DummyTop.Position.DefaultValue.Normalize;
+
+  // Topa vurduðun an hedefin gideceði yeri göster
+  // Gösterilen hedefi biz visible ile gizledik.
+  with FloatAniMoveAndroal do
+    if not Running and (DummyTop.Position.DefaultValue.Y < 0) then
+    begin
+      B := abs((P.Y - (-K.Y)) / D.Y);
+      M := P + D * B;
+      S := RoundCubeOyuncu.Width * 0.5;
+      P := TControl3D(parent).Position.Point;
+      if M.X - S < -K.X then
+        M.X := -K.X + S;
+      if M.X + S > K.X then
+        M.X := K.X - S;
+      StrokeCubeTarget.Position.Point := M;
+
+      // rakip oyuncu atýlan hedefe doðru harekete geçsin
+      duration := 0.15 + random * 0.25;  //rakip hýzý
+      StartValue := P.X;
+      StopValue := M.X;
+      start;
+    end;
+
+end;
+
+procedure TForm1.vurus;
+var
+  seite: integer;
+const
+  einwurf: integer = 3;
+begin
+  // skor yazdýr
+  Text3D1.Text := format('%d : %d', [trunc(punkte.X), trunc(punkte.Y)]);
+  seite := 1 - (2 * ((trunc(punkte.Z) div einwurf) mod 2));
+  punkte.Z := punkte.Z + 1;
+  DummyTop.Position.DefaultValue := Point3D(random * 0.5, 1, 0) * seite;
+  with StrokeCubeSerit do
+  begin
+    DummyTop.Position.Point := Point3D(Width - 2, Height - 4, 0) * -0.5 * seite;
+  end;
+  FloatAniShowBegin.start;
+end;
+
+procedure TForm1.ColorKeyAniViewPortFinish(Sender: TObject);
+begin
+  FloatAniShowEnd.start; // Gol olunca top renk deðiþtir.
+end;
+
+procedure TForm1.FloatAniGameLoopFinish(Sender: TObject);
+begin
+  ColorKeyAniViewPort.start; // Gol olunca alan renk deðiþsin
+end;
+
+procedure TForm1.FloatAniGameLoopProcess(Sender: TObject);
+begin
+  MoveBall;
+  AndroAl;
+end;
+
+procedure TForm1.FloatAniShowBeginFinish(Sender: TObject);
+begin
+  // MoveBall;
+  // AndroAl;
+  FloatAniGameLoop.start;
+end;
+
+procedure TForm1.FloatAniShowEndFinish(Sender: TObject);
+begin
+  vurus; // gol olduðu zaman top baþlangýç noktasýna gitsin. rastgele top hareketi olsun
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  RandSeed := 23;
+  speed := startspeed;
+  punkte := NullPoint3D;
+  DummyTop.Position.DefaultValue := Point3D(0, 1, 0);
+  DummyTop.RotationAngle.Z := 90;
+  StrokeCubeSerit.SetSize(Field2D.X, Field2D.Y, 2);
+  Plane1.SetSize(Field2D.X, Field2D.Y, 0);
+  Plane1.Position.Point := Point3D(0, 0, 1);
+  RoundCubeOyuncu.SetSize(3, 0.5, 1);
+  RoundCubeOyuncu.Position.Y := StrokeCubeSerit.Height * 0.5 - 1;
+
+  Text3D1.Position.Point := Point3D(0, -25, 2);
+  Text3D1.ResetRotationAngle;
+  Text3D1.RotationAngle.X := 70.0;
+
+  // Rakip Oyuncu Yerini Belirleme
+  with TRoundCube(RoundCubeOyuncu.Clone(nil)) do
+  begin
+    parent := Dummy1;
+    Position.Y := StrokeCubeSerit.Height * -0.5 + 1;
+    OnRender := RoundCubeOyuncuRender;
+    // OnMouseDown := RoundCubeOyuncuMouseDown;
+    // OnMouseMove := RoundCubeOyuncuMouseMove;
+    // OnMouseUp := RoundCubeOyuncuMouseUp;
+    HitTest := false;
+    AddObject(FloatAniMoveAndroal);
+    FloatAniMoveAndroal.PropertyName := 'Position.X';
+    HitTest := true;
+  end;
+
+  RoundCubeOyuncu.AutoCapture := true;
+  vurus;
+end;
+
+procedure TForm1.MoveBall;
+var
+  P, D, M: TPoint3D;
+  W: Single;
+begin
+  speed := TPointF.Create(Plane1.Width, Plane1.Height).Length /
+    (startspeed * Field2D.Length);
+  P := Dummy1.AbsoluteToLocal3D(DummyTop.AbsolutePosition);
+  D := DummyTop.Position.DefaultValue.Normalize;
+  with StrokeCubeSerit do
+    M := Point3D(Width, Height, Depth);
+  with DummyTop do
+    M := (M - Point3D(Width, Height, Depth)) * 0.5;
+
+  P := P + D * speed;
+
+  // Top Alan Dýþýna Çýkmasýn
+  if ((P.X > M.X) and (D.X > 0)) or ((P.X < -M.X) and (D.X < 0)) then
+  begin
+    ColorKeyAniSerit.start;
+    if abs(D.X / D.Y) > 2 then
+      D := Point3D(random, D.X, 0)
+    else
+      D.X := -D.X;
+  end;
+
+  if ((P.Y > M.Y) and (D.Y > 0)) or ((P.Y < -M.Y) and (D.Y < 0)) then
+  begin
+    if P.Y > M.Y then
+      punkte.X := punkte.X + 1;
+    if P.Y < -M.Y then
+      punkte.Y := punkte.Y + 1;
+
+    FloatAniGameLoop.StopAtCurrent;
+    exit;
+  end;
+
+  with DummyTop do
+  begin
+    Position.Point := Position.Point + D * speed;
+    Position.DefaultValue := D * Point3D(1, 1, 0);
+  end;
+
+end;
+
+procedure TForm1.RoundCubeOyuncuMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Single; RayPos, RayDir: TVector3D);
+begin
+  if ssLeft in Shift then
+    with TControl3D(Sender).Position do
+    begin
+      DefaultValue := Point - (RayDir * RayPos.Length) * Point3D(1, 0, 0);
+      TControl3D(Sender).Tag := 1;
+    end;
+end;
+
+procedure TForm1.RoundCubeOyuncuMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Single; RayPos, RayDir: TVector3D);
+begin
+  Viewport3D1.BeginUpdate;
+  if ssLeft in Shift then
+    with TControl3D(Sender).Position do
+    begin
+      if TControl3D(Sender).Tag = 0 then
+        DefaultValue := Point - (RayDir * RayPos.Length) * Point3D(1, 0, 0)
+      else
+        TControl3D(Sender).Tag := 1;
+      Point := DefaultValue + (RayDir * RayPos.Length) * Point3D(1, 0, 0);
+    end;
+  Viewport3D1.endUpdate;
+end;
+
+procedure TForm1.RoundCubeOyuncuMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Single; RayPos, RayDir: TVector3D);
+begin
+  TControl3D(Sender).Tag := 0;
+
+  // Kaleciyi býraktýðýn anda ortaya gelsin
+  if TControl3D(Sender) = RoundCubeOyuncu then
+  begin
+    RoundCubeOyuncu.AnimateFloat('Position.X', 0);
+  end;
+
+end;
+
+procedure TForm1.RoundCubeOyuncuRender(Sender: TObject; Context: TContext3D);
+var
+  P, Z, R, M, D: TPoint3D;
+begin
+  With TControl3D(Sender) do
+  begin
+    P := AbsoluteToLocal3D(DummyTop.AbsolutePosition);
+    Z := Point3D(1 / Width, 1 / Height, 1 / Depth);
+    R := Point3D(Width, Height, Depth);
+    D := Position.Point;
+  end;
+
+  with DummyTop do
+    M := (R + Point3D(Width, Height, Depth)) * 0.5;
+  if ((abs(P.X) < M.X) and (abs(P.Y) < M.Y)) then
+  begin
+    D := (DummyTop.Position.Point - D).Normalize;
+    D := D * Point3D(45, 90, 0);
+    DummyTop.Position.DefaultValue := D;
+    ColorKeyAnimation2.start;
+  end;
+
+end;
+
+end.

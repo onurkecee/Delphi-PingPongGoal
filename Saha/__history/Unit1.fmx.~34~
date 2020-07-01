@@ -1,0 +1,242 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 531
+  ClientWidth = 328
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 3
+  object Viewport3D1: TViewport3D
+    Align = Client
+    Color = claMediumseagreen
+    Size.Width = 328.000000000000000000
+    Size.Height = 531.000000000000000000
+    Size.PlatformDefault = False
+    object Dummy1: TDummy
+      Position.Z = 5.000000000000000000
+      Scale.X = 0.500000000000000000
+      Scale.Y = 0.500000000000000000
+      Scale.Z = 0.500000000000000000
+      RotationAngle.X = 290.000000000000000000
+      Width = 1.000000000000000000
+      Height = 1.000000000000000000
+      Depth = 1.000000000000000000
+      Quanternion = '(0.5735764503479,0,0,-0.819152057170868)'
+      object Plane1: TPlane
+        Width = 16.000000000000000000
+        Height = 35.000000000000000000
+        Depth = 0.001000000047497451
+        HitTest = False
+        MaterialSource = LightMaterialKhaki
+      end
+      object RoundCubeOyuncu: TRoundCube
+        Position.Y = 15.000000000000000000
+        Width = 3.000000000000000000
+        Height = 0.500000000000000000
+        Depth = 1.000000000000000000
+        OnMouseDown = RoundCubeOyuncuMouseDown
+        OnMouseMove = RoundCubeOyuncuMouseMove
+        OnMouseUp = RoundCubeOyuncuMouseUp
+        OnRender = RoundCubeOyuncuRender
+        MaterialSource = LightMaterialTomato
+        object PlaneShadow: TPlane
+          Position.Z = 0.899999976158142100
+          Locked = True
+          Width = 3.000000000000000000
+          Height = 1.000000000000000000
+          Depth = 0.001000000047497451
+          Opacity = 0.800000011920929000
+          HitTest = False
+          MaterialSource = LightMaterialShadow
+        end
+      end
+      object DummyTop: TDummy
+        RotationAngle.X = 273.757293701171900000
+        RotationAngle.Y = 356.545806884765600000
+        Width = 1.000000000000000000
+        Height = 1.000000000000000000
+        Depth = 1.000000000000000000
+        Quanternion = 
+          '(-0.516193926334381,0.0258075147867203,-0.0155637925490737,-0.85' +
+          '5940639972687)'
+        object Sphere1: TSphere
+          RotationAngle.X = 255.981552124023400000
+          RotationAngle.Y = 182.119369506835900000
+          Locked = True
+          Width = 1.000000000000000000
+          Height = 1.000000000000000000
+          Depth = 1.000000000000000000
+          HitTest = False
+          MaterialSource = LightMaterialBitmap
+          Quanternion = 
+            '(0.0145749561488628,0.615429401397705,-0.787975430488586,-0.0113' +
+            '83387260139)'
+        end
+        object FloatAniShowBegin: TFloatAnimation
+          Duration = 0.200000002980232200
+          OnFinish = FloatAniShowBeginFinish
+          PropertyName = 'Opacity'
+          StartValue = 0.000000000000000000
+          StopValue = 1.000000000000000000
+        end
+        object FloatAniShowEnd: TFloatAnimation
+          Duration = 0.500000000000000000
+          OnFinish = FloatAniShowEndFinish
+          PropertyName = 'Opacity'
+          StartValue = 1.000000000000000000
+          StopValue = 0.000000000000000000
+        end
+        object Disk1: TDisk
+          Position.Z = 0.899999976158142100
+          RotationAngle.X = 90.000000000000000000
+          Locked = True
+          Width = 1.000000000000000000
+          Height = 0.001000000047497451
+          Depth = 1.000000000000000000
+          Opacity = 0.800000011920929000
+          HitTest = False
+          SubdivisionsCap = 1
+          MaterialSource = LightMaterialShadow
+          Quanternion = '(0.70710676908493,0,0,0.70710676908493)'
+        end
+      end
+      object StrokeCubeSerit: TStrokeCube
+        Color = claBlack
+        Locked = True
+        Width = 16.000000000000000000
+        Height = 35.000000000000000000
+        Depth = 2.000000000000000000
+        HitTest = False
+        object ColorKeyAniSerit: TColorKeyAnimation
+          Duration = 0.200000002980232200
+          Keys = <
+            item
+              Value = claYellow
+            end
+            item
+              Key = 1.000000000000000000
+              Value = claBlack
+            end>
+          PropertyName = 'Color'
+          StartFromCurrent = False
+        end
+      end
+      object Text3D1: TText3D
+        Position.Y = -10.000000000000000000
+        Position.Z = -2.000000000000000000
+        RotationAngle.X = 70.000000000000000000
+        Width = 16.000000000000000000
+        Height = 5.000000000000000000
+        Depth = 0.500000000000000000
+        Font.Size = 5.000000000000000000
+        Font.StyleExt = {00070000000000000004000000}
+        Text = '0 : 0'
+        WordWrap = False
+        Flatness = 1.000000000000000000
+        Sides = [Front, Back, Shaft]
+        MaterialBackSource = LightMaterialTomato
+        MaterialShaftSource = LightMaterialTomato
+        MaterialSource = LightMaterialTomato
+        Quanternion = '(0.5735764503479,0,0,0.819152057170868)'
+      end
+    end
+    object Light1: TLight
+      Color = claWhite
+      LightType = Directional
+      SpotCutOff = 180.000000000000000000
+      Position.X = -2.852864980697632000
+      Position.Y = 8.070276260375977000
+      RotationAngle.X = 313.950408935546900000
+      RotationAngle.Y = 24.226881027221680000
+      RotationAngle.Z = 356.384765625000000000
+      Width = 1.000000000000000000
+      Height = 1.000000000000000000
+      Depth = 1.000000000000000000
+      Quanternion = 
+        '(0.297680765390396,-0.18977627158165,-0.244073465466499,-0.90321' +
+        '3620185852)'
+      object FloatAniGameLoop: TFloatAnimation
+        Enabled = True
+        Delay = 0.500000000000000000
+        Duration = 0.200000002980232200
+        Loop = True
+        OnProcess = FloatAniGameLoopProcess
+        OnFinish = FloatAniGameLoopFinish
+        PropertyName = 'RotationCenter.Y'
+        StartValue = 0.000000000000000000
+        StopValue = 1.000000000000000000
+      end
+    end
+    object FloatAniMoveAndroal: TFloatAnimation
+      Duration = 0.200000002980232200
+      StartValue = 0.000000000000000000
+      StopValue = 0.000000000000000000
+    end
+    object ColorKeyAniViewPort: TColorKeyAnimation
+      Duration = 0.200000002980232200
+      Keys = <
+        item
+          Value = claYellow
+        end
+        item
+          Key = 1.000000000000000000
+          Value = claMediumseagreen
+        end>
+      OnFinish = ColorKeyAniViewPortFinish
+      PropertyName = 'Color'
+      StartFromCurrent = False
+    end
+  end
+  object LightMaterialBitmap: TLightMaterialSource
+    Diffuse = claWhite
+    Ambient = xFF202020
+    Emissive = claNull
+    Specular = xFF606060
+    Shininess = 30
+    Left = 56
+    Top = 24
+  end
+  object LightMaterialKhaki: TLightMaterialSource
+    Diffuse = claKhaki
+    Ambient = xFF202020
+    Emissive = claNull
+    Specular = xFF606060
+    Shininess = 30
+    Left = 224
+    Top = 24
+    object ColorKeyAnimation2: TColorKeyAnimation
+      Duration = 0.200000002980232200
+      Keys = <
+        item
+          Value = claSpringgreen
+        end
+        item
+          Key = 1.000000000000000000
+          Value = claKhaki
+        end>
+      PropertyName = 'Diffuse'
+      StartFromCurrent = False
+    end
+  end
+  object LightMaterialTomato: TLightMaterialSource
+    Diffuse = claTomato
+    Ambient = xFF202020
+    Emissive = claNull
+    Specular = xFF606060
+    Shininess = 30
+    Left = 48
+    Top = 80
+  end
+  object LightMaterialShadow: TLightMaterialSource
+    Diffuse = claBlack
+    Ambient = xFF202020
+    Emissive = claNull
+    Specular = xFF606060
+    Shininess = 30
+    Left = 224
+    Top = 88
+  end
+end

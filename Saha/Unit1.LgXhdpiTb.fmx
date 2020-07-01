@@ -1,0 +1,71 @@
+inherited Form1_LgXhdpiTb: TForm1_LgXhdpiTb
+  ClientHeight = 829
+  ClientWidth = 480
+  DesignerMasterStyle = 2
+  inherited Viewport3D1: TViewport3D
+    Size.Width = 480.000000000000000000
+    Size.Height = 829.000000000000000000
+    inherited Dummy1: TDummy
+      Quanternion = '(0.5735764503479,0,0,-0.819152057170868)'
+      inherited Plane1: TPlane
+        RotationAngle.Z = 1.000000000000000000
+        Quanternion = '(0,0,0.00872653536498547,0.999961912631989)'
+      end
+      inherited DummyTop: TDummy
+        Quanternion = 
+          '(-0.516193926334381,0.0258075147867203,-0.0155637925490737,-0.85' +
+          '5940639972687)'
+        inherited Sphere1: TSphere
+          Quanternion = 
+            '(0.0145749561488628,0.615429401397705,-0.787975430488586,-0.0113' +
+            '83387260139)'
+        end
+        inherited Disk1: TDisk
+          RotationAngle.Y = 90.000000000000000000
+          Quanternion = '(0.70710676908493,0,0,0.70710676908493)'
+        end
+      end
+      inherited StrokeCubeSerit: TStrokeCube
+        inherited ColorKeyAniSerit: TColorKeyAnimation
+          Keys = <
+            item
+              Value = claYellow
+            end
+            item
+              Value = claBlack
+            end>
+        end
+      end
+      inherited Text3D1: TText3D
+        Font.StyleExt = {00070000000000000004000000}
+        Quanternion = '(0.5735764503479,0,0,0.819152057170868)'
+      end
+    end
+    inherited Light1: TLight
+      Position.Z = -10.000000000000000000
+      Quanternion = 
+        '(0.297680765390396,-0.18977627158165,-0.244073465466499,-0.90321' +
+        '3620185852)'
+    end
+    inherited ColorKeyAniViewPort: TColorKeyAnimation
+      Keys = <
+        item
+          Value = claYellow
+        end
+        item
+          Value = claMediumseagreen
+        end>
+    end
+  end
+  inherited LightMaterialKhaki: TLightMaterialSource
+    inherited ColorKeyAnimation2: TColorKeyAnimation
+      Keys = <
+        item
+          Value = claSpringgreen
+        end
+        item
+          Value = claKhaki
+        end>
+    end
+  end
+end
